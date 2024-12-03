@@ -95,3 +95,53 @@ function checkAnswer(selectedOption) {
 function displayScore() {
   scoreBoard.textContent = `Your score is: ${currentScore} / ${questions.length}`;
 }
+
+// Function to register a new user
+function registerUser(email, password) {
+  auth.createUserWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      console.log("User registered:", userCredential.user);
+    })
+    .catch((error) => {
+      console.error("Error registering user:", error.message);
+    });
+}
+
+// Function to log in a user
+function loginUser(email, password) {
+  auth.signInWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      console.log("User logged in:", userCredential.user);
+    })
+    .catch((error) => {
+      console.error("Error logging in:", error.message);
+    });
+}
+
+// Function to reset a user's password
+function resetPassword(email) {
+  auth.sendPasswordResetEmail(email)
+    .then(() => {
+      console.log("Password reset email sent.");
+    })
+    .catch((error) => {
+      console.error("Error resetting password:", error.message);
+    });
+    }
+
+function handleRegister() {
+  const email = document.getElementById("registerEmail").value;
+  const password = document.getElementById("registerPassword").value;
+  registerUser(email, password);
+}
+
+function handleLogin() {
+  const email = document.getElementById("loginEmail").value;
+  const password = document.getElementById("loginPassword").value;
+  loginUser(email, password);
+}
+
+function handlePasswordReset() {
+  const email = document.getElementById("resetEmail").value;
+  resetPassword(email);
+                  }
