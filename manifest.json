@@ -1,0 +1,20 @@
+{
+  "name": "Bible Quiz Game",
+  "short_name": "Bible Quiz",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ff7e5f",
+  "theme_color": "#ff7e5f",
+  "icons": [
+    {
+      "src": "images/icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "images/icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
