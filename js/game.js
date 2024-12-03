@@ -1,14 +1,15 @@
-// Initialize Firebase
+// Firebase configuration object
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "bible-quiz-game-3e67c",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID",
+  apiKey: "AIzaSyBBEdqprMjK8-8mAIi4TH8bFLe00VJsPgk", // Replace with your Web API Key
+  projectId: "bible-quiz-game-3e67c", // Replace with your Project ID
 };
 
+// Initialize Firebase
 firebase.initializeApp(firebaseConfig);
+
+// Initialize Firebase Services
+const auth = firebase.auth(); // Authentication
+const db = firebase.firestore(); // Firestore Database
 
 let currentUser;
 let currentScore = 0;
