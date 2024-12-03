@@ -6,69 +6,78 @@ const firebaseConfig = {
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
 
-// Initialize Firebase Services
-const auth = firebase.auth(); // Authentication
-const db = firebase.firestore(); // Firestore Database
-
+// Global Variables
 let currentUser;
 let currentScore = 0;
 let currentQuestionIndex = 0;
-let questions = []; // Store shuffled questions
+let questions = [];
 
+// DOM Elements
 const questionContainer = document.getElementById("question-container");
 const optionsList = document.getElementById("options");
 const scoreBoard = document.getElementById("score-board");
 const userNameElement = document.getElementById("user-name");
 
-document.getElementById("login-btn").addEventListener("click", login);
-document.getElementById("next-btn").addEventListener("click", nextQuestion);
+// User Registration
+function registerUser(email, password) {
+  auth.createUserWithEmailAndPassword(email, password)
+    .then(userCredential => {
+      currentUser = userCredential.user;
+      alert("Registration successful!");
+    })
+    .catch(error => alert(error.message));
+}
 
-function login() {
-  const username = document.getElementById("username").value;
-  const password = document.getElementById("password").value;
-
-  firebase.auth().signInWithEmailAndPassword(username, password)
+// User Login
+function loginUser(email, password) {
+  auth.signInWithEmailAndPassword(email, password)
     .then(userCredential => {
       currentUser = userCredential.user;
       document.getElementById("login-section").style.display = "none";
       document.getElementById("game-section").style.display = "block";
-      userNameElement.textContent = username;
+      userNameElement.textContent = currentUser.email;
       loadQuestions();
     })
-    .catch(error => {
-      alert(error.message);
-    });
+    .catch(error => alert(error.message));
 }
 
+// Reset Password
+function resetPassword(email) {
+  auth.sendPasswordResetEmail(email)
+    .then(() => alert("Password reset email sent."))
+    .catch(error => alert(error.message));
+}
+
+// Load Questions
 function loadQuestions() {
-  // Fetch questions from Firebase or locally
   questions = shuffle([
     { question: "What is the first book of the Bible?", options: ["Genesis", "Exodus", "Leviticus"], answer: "Genesis" },
     { question: "Who led the Israelites out of Egypt?", options: ["Moses", "Abraham", "David"], answer: "Moses" },
-    // ... add more questions here
+    // Add more questions here...
   ]);
   showQuestion();
 }
 
+// Shuffle Questions
 function shuffle(array) {
-  let currentIndex = array.length, randomIndex, temporaryValue;
-
+  let currentIndex = array.length, randomIndex, tempValue;
   while (currentIndex !== 0) {
     randomIndex = Math.floor(Math.random() * currentIndex);
     currentIndex -= 1;
-    temporaryValue = array[currentIndex];
+    tempValue = array[currentIndex];
     array[currentIndex] = array[randomIndex];
-    array[randomIndex] = temporaryValue;
+    array[randomIndex] = tempValue;
   }
-
   return array;
 }
 
+// Display Question
 function showQuestion() {
   const currentQuestion = questions[currentQuestionIndex];
   document.getElementById("question").textContent = currentQuestion.question;
-  
   optionsList.innerHTML = "";
   currentQuestion.options.forEach(option => {
     const li = document.createElement("li");
@@ -78,57 +87,38 @@ function showQuestion() {
   });
 }
 
+// Check Answer
 function checkAnswer(selectedOption) {
   const correctAnswer = questions[currentQuestionIndex].answer;
   if (selectedOption === correctAnswer) {
     currentScore++;
   }
-
   if (currentQuestionIndex < questions.length - 1) {
     currentQuestionIndex++;
     showQuestion();
   } else {
     displayScore();
+    saveToLeaderboard();
   }
 }
 
+// Display Score
 function displayScore() {
-  scoreBoard.textContent = `Your score is: ${currentScore} / ${questions.length}`;
+  scoreBoard.textContent = `Your score: ${currentScore} / ${questions.length}`;
 }
 
-// Function to register a new user
-function registerUser(email, password) {
-  auth.createUserWithEmailAndPassword(email, password)
-    .then((userCredential) => {
-      console.log("User registered:", userCredential.user);
-    })
-    .catch((error) => {
-      console.error("Error registering user:", error.message);
+// Save to Leaderboard
+function saveToLeaderboard() {
+  if (currentUser) {
+    db.collection("leaderboard").add({
+      user: currentUser.email,
+      score: currentScore,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
     });
+  }
 }
 
-// Function to log in a user
-function loginUser(email, password) {
-  auth.signInWithEmailAndPassword(email, password)
-    .then((userCredential) => {
-      console.log("User logged in:", userCredential.user);
-    })
-    .catch((error) => {
-      console.error("Error logging in:", error.message);
-    });
-}
-
-// Function to reset a user's password
-function resetPassword(email) {
-  auth.sendPasswordResetEmail(email)
-    .then(() => {
-      console.log("Password reset email sent.");
-    })
-    .catch((error) => {
-      console.error("Error resetting password:", error.message);
-    });
-    }
-
+// Event Handlers
 function handleRegister() {
   const email = document.getElementById("registerEmail").value;
   const password = document.getElementById("registerPassword").value;
@@ -144,4 +134,4 @@ function handleLogin() {
 function handlePasswordReset() {
   const email = document.getElementById("resetEmail").value;
   resetPassword(email);
-                  }
+  }
