@@ -1,25 +1,28 @@
-const db = firebase.firestore();
-
-function saveLeaderboard(userId, score) {
-  const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+function saveScoreToLeaderboard(username, score) {
   db.collection("leaderboard").add({
-    userId: userId,
+    username: username,
     score: score,
-    timestamp: timestamp,
-  });
+    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+  })
+    .then(() => {
+      console.log("Score added to leaderboard.");
+    })
+    .catch((error) => {
+      console.error("Error adding score:", error.message);
+    });
 }
 
 function getLeaderboard() {
   db.collection("leaderboard")
     .orderBy("score", "desc")
-    .limit(10)
+    .limit(10) // Top 10 scores
     .get()
-    .then(snapshot => {
-      snapshot.forEach(doc => {
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
         console.log(doc.data());
       });
     })
-    .catch(error => {
-      console.log("Error getting leaderboard: ", error);
+    .catch((error) => {
+      console.error("Error fetching leaderboard:", error.message);
     });
 }
