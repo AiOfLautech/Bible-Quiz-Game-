@@ -6,7 +6,7 @@ The service worker file (`service-worker.js`) will cache your assets for offline
 
 **`registerServiceWorker.js`**:
 
-```javascript
+javascript
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker
