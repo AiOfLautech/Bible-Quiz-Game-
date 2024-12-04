@@ -8,7 +8,7 @@ self.addEventListener('install', (event) => {
         '/js/game.js',
         '/js/leaderboard.js',
         '/manifest.json',
-        '/images/icon.png',
+        '/images/icon.png'
       ]);
     })
   );
