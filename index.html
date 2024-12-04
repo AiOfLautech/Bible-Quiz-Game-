@@ -4,56 +4,61 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bible Quiz Game</title>
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-  <!-- Main Container -->
-  <div id="main-container">
-
-    <!-- Login Section -->
-    <div id="login-section">
-      <h2>Login to Start</h2>
-      <label for="username">Username (Email):</label>
-      <input type="email" id="loginEmail" placeholder="Enter your email" required><br>
-      <label for="password">Password:</label>
-      <input type="password" id="loginPassword" placeholder="Enter your password" required><br>
-      <button id="login-btn">Login</button>
-      <button id="reset-password-btn">Forgot Password?</button>
-      <p>Don't have an account? <span id="register-link">Register here</span></p>
+  <div id="game-section">
+    <div id="question-container">
+      <h2 id="question">Question will appear here</h2>
+      <ul id="options"></ul>
     </div>
-
-    <!-- Register Section -->
-    <div id="register-section" style="display: none;">
-      <h2>Create an Account</h2>
-      <label for="registerEmail">Email:</label>
-      <input type="email" id="registerEmail" placeholder="Enter your email"><br>
-      <label for="registerPassword">Password:</label>
-      <input type="password" id="registerPassword" placeholder="Enter your password"><br>
-      <button id="register-btn">Register</button>
-      <button id="back-to-login-btn">Back to Login</button>
+    <div id="score-board">
+<p id="score">Your score: 0</p>
+      <button id="next-button" onclick="loadNextQuestion()">Next</button>
     </div>
-
-    <!-- Game Section -->
-    <div id="game-section" style="display: none;">
-      <h2>Welcome, <span id="user-name"></span></h2>
-      <div id="score-board">
-        Score: <span id="score">0</span>
-      </div>
-      <div id="question-container">
-        <h3 id="question"></h3>
-        <ul id="options"></ul>
-        <button id="next-btn">Next Question</button>
-      </div>
+  </div>
+  
+  <!-- Login Modal -->
+  <div id="login-modal" class="modal">
+    <div class="modal-content">
+      <h2>Login</h2>
+      <form id="login-form">
+        <input type="email" id="login-email" placeholder="Email" required>
+        <input type="password" id="login-password" placeholder="Password" required>
+        <button type="submit">Login</button>
+      </form>
+      <button id="forgot-password" onclick="resetPassword()">Forgot Password</button>
+      <button onclick="showRegisterModal()">Register</button>
     </div>
-
   </div>
 
-  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-gam3.js"></script>
+  <!-- Register Modal -->
+  <div id="register-modal" class="modal">
+    <div class="modal-content">
+      <h2>Register</h2>
+      <form id="register-form">
+        <input type="email" id="register-email" placeholder="Email" required>
+        <input type="password" id="register-password" placeholder="Password" required>
+        <input type="text" id="register-username" placeholder="Username" required>
+        <button type="submit">Register</button>
+      </form>
+      <button onclick="showLoginModal()">Back to Login</button>
+    </div>
+  </div>
+
+  <!-- Leaderboard Section -->
+  <div id="leaderboard-section">
+    <h2>Leaderboard</h2>
+    <ul id="leaderboard"></ul>
+    <button onclick="claimPrize()">Claim Prize</button>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js"></script>
-  <script src="js/registerServiceWorker.js"></script>
-  <script src="js/game.js"></script>
-  <script src="js/leaderboard.js"></script>
-  <script src="js/service-worker.js"></script>
+  <script src="/js/firebaseConfig.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/game.js"></script>
+  <script src="/js/leaderboard.js"></script>
 </body>
-  </html>
+    </html>
