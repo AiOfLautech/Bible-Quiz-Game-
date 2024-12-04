@@ -3,7 +3,8 @@ const app = express();
 const path = require('path');
 const firebaseAdmin = require('./firebaseAdmin');
 const { sendLoginNotification, exportUsersToPDF } = require('./routes');
-
+const routes = require('./routes');
+app.use('/api', routes);
 // Serve static files
 app.use(express.static(path.join(__dirname, '../public')));
 
