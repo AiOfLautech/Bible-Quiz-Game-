@@ -1,22 +1,18 @@
-// Display Leaderboard
-function fetchLeaderboard() {
-  const leaderboardList = document.getElementById("leaderboard");
-  leaderboardList.innerHTML = ""; // Clear previous leaderboard
+function loadLeaderboard() {
+  db.collection('users').orderBy('score', 'desc').limit(10).get().then(querySnapshot => {
+    let leaderboard = document.getElementById("leaderboard");
+    leaderboard.innerHTML = '';
 
-  db.collection("leaderboard")
-    .orderBy("score", "desc")
-    .limit(10) // Top 10 players
-    .get()
-    .then(snapshot => {
-      snapshot.forEach(doc => {
-        const data = doc.data();
-        const li = document.createElement("li");
-        li.textContent = `${data.user}: ${data.score}`;
-        leaderboardList.appendChild(li);
-      });
-    })
-    .catch(error => console.error("Error fetching leaderboard:", error));
+    querySnapshot.forEach(doc => {
+      let data = doc.data();
+      let li = document.createElement('li');
+      li.textContent = `${data.username}: ${data.score}`;
+      leaderboard.appendChild(li);
+    });
+  });
 }
 
-// Initialize Leaderboard
-document.getElementById("view-leaderboard-btn").addEventListener("click", fetchLeaderboard);
+function claimPrize() {
+  // Implement prize claim logic
+  alert('Prize claimed if you are on top!');
+  }
