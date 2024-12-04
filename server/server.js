@@ -1,21 +1,27 @@
 const express = require('express');
 const app = express();
 const path = require('path');
+const firebaseAdmin = require('./firebaseAdmin');
+const { sendLoginNotification, exportUsersToPDF } = require('./routes');
 
-// Serve static files (HTML, CSS, JS)
-app.use(express.static(path.join(__dirname, 'public')));
+// Serve static files
+app.use(express.static(path.join(__dirname, '../public')));
 
-// API routes for user authentication, password reset, leaderboard handling
+// API routes for leaderboard and notifications
 app.get('/api/leaderboard', (req, res) => {
-  res.json({ message: "Leaderboard data coming from Firebase" });
+  // Fetch leaderboard data from Firebase
+  firebaseAdmin.firestore().collection('users').orderBy('score', 'desc').limit(10).get()
+    .then(snapshot => {
+      let leaderboard = [];
+      snapshot.forEach(doc => leaderboard.push(doc.data()));
+      res.json(leaderboard);
+    });
 });
 
-// Send a welcome message on root route
-app.get('/', (req, res) => {
-  res.send("Bible Quiz Game Backend");
-});
+app.post('/api/notify-login', sendLoginNotification);
+app.get('/api/export-pdf', exportUsersToPDF);
 
-// Start server on port 5000
+// Start server
 app.listen(5000, () => {
-  console.log('Server is running on port 5000');
+  console.log('Server running on http://localhost:5000');
 });
